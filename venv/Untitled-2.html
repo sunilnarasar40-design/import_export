@@ -1,0 +1,611 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VisionPro AI | Object Detection</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #090909;
+  color: white;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 25px 8%;
+  border-bottom: 1px solid #252525;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.logo span {
+  color: #a5ffca;
+}
+
+nav a {
+  color: #ccc;
+  text-decoration: none;
+  margin-left: 25px;
+}
+
+nav a:hover {
+  color: #a5ffca;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  padding: 65px 8%;
+}
+
+.tag {
+  color: #a5ffca;
+  letter-spacing: 3px;
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+
+h1 {
+  font-size: clamp(36px, 5vw, 65px);
+  line-height: 1.08;
+  margin-bottom: 25px;
+}
+
+.description {
+  color: #aaa;
+  line-height: 1.8;
+  margin-bottom: 30px;
+}
+
+button, .upload-label {
+  background: #a5ffca;
+  color: #07130b;
+  border: none;
+  border-radius: 8px;
+  padding: 13px 20px;
+  font-weight: bold;
+  cursor: pointer;
+  display: inline-block;
+  margin: 5px 5px 5px 0;
+}
+
+button:hover, .upload-label:hover {
+  background: #7be8a7;
+}
+
+.secondary {
+  background: #242424;
+  color: white;
+  border: 1px solid #444;
+}
+
+.stats {
+  display: flex;
+  gap: 30px;
+  margin-top: 40px;
+  flex-wrap: wrap;
+}
+
+.stats strong {
+  display: block;
+  font-size: 23px;
+  margin-bottom: 8px;
+}
+
+.stats small {
+  color: #888;
+}
+
+.demo {
+  background: #171717;
+  border: 1px solid #333;
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.demo-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  color: #bbb;
+  font-size: 14px;
+}
+
+.status {
+  color: #a5ffca;
+}
+
+.canvas-wrap {
+  position: relative;
+  width: 100%;
+  min-height: 260px;
+  background: #222;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+canvas {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.placeholder {
+  text-align: center;
+  padding: 35px 15px;
+  color: #aaa;
+  line-height: 2;
+}
+
+.controls {
+  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+#imageInput {
+  display: none;
+}
+
+.results {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  background: #202020;
+}
+
+.results h3 {
+  margin-bottom: 12px;
+}
+
+#objectList {
+  color: #bbb;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+
+.section {
+  padding: 55px 8%;
+}
+
+.section h2 {
+  font-size: 30px;
+  margin-bottom: 25px;
+}
+
+.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.feature {
+  padding: 25px;
+  background: #151515;
+  border: 1px solid #303030;
+  border-radius: 12px;
+}
+
+.feature h3 {
+  margin-bottom: 12px;
+  color: #a5ffca;
+}
+
+.feature p {
+  color: #aaa;
+  line-height: 1.7;
+}
+
+footer {
+  padding: 30px;
+  text-align: center;
+  color: #888;
+  border-top: 1px solid #252525;
+}
+
+@media (max-width: 800px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 40px 5%;
+  }
+
+  header {
+    padding: 20px 5%;
+  }
+
+  nav a {
+    margin-left: 10px;
+    font-size: 13px;
+  }
+
+  .features {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    gap: 20px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">◉ VisionPro <span>AI</span></div>
+  <nav>
+    <a href="#features">Features</a>
+    <a href="#demo">Demo</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+<section class="hero">
+  <div>
+    <p class="tag">AI-POWERED DETECTION</p>
+
+    <h1>Real-world object detection for images and live camera feeds.</h1>
+
+    <p class="description">
+      Detect people, vehicles, bottles, chairs and everyday objects
+      using a pretrained AI computer vision model.
+      Upload an image or start your webcam to test the system.
+    </p>
+
+    <button onclick="openDemo()">Launch Demo →</button>
+    <button class="secondary"
+      onclick="document.getElementById('features').scrollIntoView({behavior:'smooth'})">
+      Learn More
+    </button>
+
+    <div class="stats">
+      <div><strong>80</strong><small>COCO Classes</small></div>
+      <div><strong>Live</strong><small>Camera Analysis</small></div>
+      <div><strong>AI</strong><small>Object Recognition</small></div>
+    </div>
+  </div>
+
+  <div class="demo" id="demo">
+    <div class="demo-top">
+      <span>Vision Detection Studio</span>
+      <span class="status" id="status">● Model loading...</span>
+    </div>
+
+    <div class="canvas-wrap">
+      <div class="placeholder" id="placeholder">
+        <div style="font-size:40px">⌗</div>
+        <strong>AI Vision Preview</strong>
+        <p>Start your camera or upload an image</p>
+      </div>
+      <canvas id="canvas" hidden></canvas>
+    </div>
+
+    <div class="controls">
+      <button onclick="startCamera()">Start Camera</button>
+      <button class="secondary" onclick="stopCamera()">Stop Camera</button>
+      <label for="imageInput" class="upload-label">Upload Image</label>
+      <input id="imageInput" type="file" accept="image/*">
+      <button class="secondary" onclick="clearDetection()">Clear</button>
+    </div>
+
+    <div class="results">
+      <h3>Detection Results</h3>
+      <p id="objectList">Load the AI model to begin.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="features">
+  <h2>Powerful Vision Features</h2>
+
+  <div class="features">
+    <div class="feature">
+      <h3>01. Live Detection</h3>
+      <p>Use your webcam to detect supported objects in a live video stream.</p>
+    </div>
+
+    <div class="feature">
+      <h3>02. Image Analysis</h3>
+      <p>Upload an image and identify objects with visual bounding boxes.</p>
+    </div>
+
+    <div class="feature">
+      <h3>03. Confidence Scores</h3>
+      <p>View each prediction's model confidence score and detected object names.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer id="contact">
+  VisionPro AI — Real-time computer vision demo
+</footer>
+
+<!-- TensorFlow.js and COCO-SSD pretrained model -->
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js"></script>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const placeholder = document.getElementById("placeholder");
+const statusText = document.getElementById("status");
+const objectList = document.getElementById("objectList");
+const imageInput = document.getElementById("imageInput");
+
+let model = null;
+let stream = null;
+let video = null;
+let running = false;
+let processing = false;
+let sourceImage = null;
+let animationId = null;
+
+async function loadModel() {
+  try {
+    statusText.textContent = "● Loading AI model...";
+
+    model = await cocoSsd.load();
+
+    statusText.textContent = "● AI model ready";
+    objectList.textContent = "Upload an image or start the camera.";
+  } catch (error) {
+    console.error(error);
+    statusText.textContent = "● Model failed to load";
+    objectList.textContent =
+      "Check your internet connection and reload the page.";
+  }
+}
+
+function openDemo() {
+  document.getElementById("demo").scrollIntoView({
+    behavior: "smooth"
+  });
+}
+
+function showCanvas() {
+  placeholder.hidden = true;
+  canvas.hidden = false;
+}
+
+async function startCamera() {
+  if (!model) {
+    objectList.textContent = "Please wait for the AI model to load.";
+    return;
+  }
+
+  stopCamera();
+  sourceImage = null;
+
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "user" },
+      audio: false
+    });
+
+    video = document.createElement("video");
+    video.srcObject = stream;
+    video.playsInline = true;
+    video.muted = true;
+
+    await video.play();
+
+    showCanvas();
+    running = true;
+    statusText.textContent = "● Camera running";
+    detectCameraFrame();
+  } catch (error) {
+    console.error(error);
+    statusText.textContent = "● Camera unavailable";
+    objectList.textContent =
+      "Allow camera permission and use localhost or HTTPS. " +
+      "Check that no other application is blocking your camera.";
+  }
+}
+
+async function detectCameraFrame() {
+  if (!running || !video || video.readyState < 2) {
+    if (running) animationId = requestAnimationFrame(detectCameraFrame);
+    return;
+  }
+
+  if (processing) {
+    animationId = requestAnimationFrame(detectCameraFrame);
+    return;
+  }
+
+  processing = true;
+
+  try {
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    const predictions = await model.detect(video);
+
+    if (running) {
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      drawBoxes(predictions);
+      showResults(predictions);
+    }
+  } catch (error) {
+    console.error(error);
+  } finally {
+    processing = false;
+  }
+
+  if (running) {
+    animationId = requestAnimationFrame(detectCameraFrame);
+  }
+}
+
+function drawBoxes(predictions) {
+  ctx.lineWidth = Math.max(2, canvas.width / 300);
+  ctx.font = "bold 14px Arial";
+
+  predictions.forEach(prediction => {
+    const [x, y, width, height] = prediction.bbox;
+    const label = prediction.class + " " +
+      (prediction.score * 100).toFixed(1) + "%";
+
+    const labelWidth = ctx.measureText(label).width + 12;
+    const labelHeight = 23;
+    const labelY = Math.max(0, y - labelHeight);
+
+    ctx.strokeStyle = "#78ffac";
+    ctx.strokeRect(x, y, width, height);
+
+    ctx.fillStyle = "#78ffac";
+    ctx.fillRect(x, labelY, labelWidth, labelHeight);
+
+    ctx.fillStyle = "#07130b";
+    ctx.fillText(label, x + 6, labelY + 16);
+  });
+}
+
+function showResults(predictions) {
+  if (!predictions.length) {
+    objectList.textContent = "No supported objects detected.";
+    return;
+  }
+
+  objectList.innerHTML = predictions.map(p =>
+    `<div>${escapeHTML(p.class)} — ${(p.score * 100).toFixed(1)}%</div>`
+  ).join("");
+}
+
+function escapeHTML(text) {
+  return String(text).replace(/[&<>"']/g, char => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  }[char]));
+}
+
+function stopCamera() {
+  running = false;
+
+  if (animationId !== null) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+
+  if (stream) {
+    stream.getTracks().forEach(track => track.stop());
+    stream = null;
+  }
+
+  if (video) {
+    video.srcObject = null;
+    video = null;
+  }
+
+  processing = false;
+  statusText.textContent = model
+    ? "● AI model ready"
+    : "● Loading model";
+}
+
+imageInput.addEventListener("change", async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    objectList.textContent = "Please select a valid image.";
+    return;
+  }
+
+  stopCamera();
+  sourceImage = null;
+
+  if (!model) {
+    objectList.textContent = "Wait for the AI model to load.";
+    return;
+  }
+
+  const image = new Image();
+  const imageURL = URL.createObjectURL(file);
+
+  image.onload = async () => {
+    try {
+      sourceImage = image;
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+
+      showCanvas();
+      ctx.drawImage(image, 0, 0);
+
+      statusText.textContent = "● Analyzing image...";
+      objectList.textContent = "Detecting objects...";
+
+      const predictions = await model.detect(image);
+
+      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+      drawBoxes(predictions);
+      showResults(predictions);
+
+      statusText.textContent = "● Analysis complete";
+    } catch (error) {
+      console.error(error);
+      objectList.textContent = "Image analysis failed.";
+    } finally {
+      URL.revokeObjectURL(imageURL);
+      imageInput.value = "";
+    }
+  };
+
+  image.onerror = () => {
+    URL.revokeObjectURL(imageURL);
+    objectList.textContent = "Could not open this image.";
+    imageInput.value = "";
+  };
+
+  image.src = imageURL;
+});
+
+function clearDetection() {
+  stopCamera();
+  sourceImage = null;
+
+  canvas.hidden = true;
+  placeholder.hidden = false;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  objectList.textContent = "Upload an image or start the camera.";
+  statusText.textContent = model
+    ? "● AI model ready"
+    : "● Loading model";
+}
+
+window.addEventListener("pagehide", stopCamera);
+
+loadModel();
+</script>
+
+</body>
+</html>
+
